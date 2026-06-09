@@ -24,6 +24,12 @@ public class AiRecommendation {
 
     private String priority;
 
+    @Column(length = 1000)
+    private String searchQuery;
+
+    @Column(length = 1000)
+    private String resourceTitle;
+
     @Column(length = 5000)
     private String recommendationText;
 
@@ -31,6 +37,8 @@ public class AiRecommendation {
     private String resourceUrl;
 
     private String resourceType;
+
+    private Integer recommendationScore;
 
     private boolean completed = false;
 
