@@ -12,7 +12,5 @@ public interface ProgressRepository extends JpaRepository<Progress, Long> {
 
     List<Progress> findByStudent(User student);
 
-    List<Progress> findByCourse(Course course);
-
     Optional<Progress> findByStudentAndCourse(User student, Course course);
 }
