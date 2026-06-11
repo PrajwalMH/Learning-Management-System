@@ -1,5 +1,6 @@
 package com.prajwalmh.AI_Enhanced.LMS.backend.service;
 
+import com.prajwalmh.AI_Enhanced.LMS.backend.dto.request.AiRecommendationRequest;
 import com.prajwalmh.AI_Enhanced.LMS.backend.dto.request.GradeRequest;
 import com.prajwalmh.AI_Enhanced.LMS.backend.dto.response.GradeResponse;
 import com.prajwalmh.AI_Enhanced.LMS.backend.entity.*;
@@ -14,12 +15,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GradeService {
 
+    private static final double AI_RECOMMENDATION_THRESHOLD = 70.0;
+
     private final GradeRepository gradeRepository;
     private final SubmissionRepository submissionRepository;
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
     private final AssignmentRepository assignmentRepository;
     private final ProgressRepository progressRepository;
+    private final AiRecommendationService aiRecommendationService;
 
     public GradeResponse gradeSubmission(Long submissionId, GradeRequest request) {
 
@@ -56,6 +60,8 @@ public class GradeService {
         submissionRepository.save(submission);
 
         updateStudentProgressAverage(submission.getStudent(), assignment.getCourse());
+
+        generateAiRecommendationIfLowScore(submission, savedGrade);
 
         return mapToResponse(savedGrade);
     }
@@ -129,7 +135,39 @@ public class GradeService {
                 grade.getSubmission().getAssignment().getCourse()
         );
 
+        generateAiRecommendationIfLowScore(updatedGrade.getSubmission(), updatedGrade);
+
         return mapToResponse(updatedGrade);
+    }
+
+    private void generateAiRecommendationIfLowScore(Submission submission, Grade grade) {
+
+        Assignment assignment = submission.getAssignment();
+
+        if (assignment == null || assignment.getMaxMarks() == null || assignment.getMaxMarks() <= 0) {
+            return;
+        }
+
+        if (grade.getMarksObtained() == null) {
+            return;
+        }
+
+        double percentage = (grade.getMarksObtained() / assignment.getMaxMarks()) * 100.0;
+
+        if (percentage < AI_RECOMMENDATION_THRESHOLD) {
+
+            AiRecommendationRequest request = new AiRecommendationRequest();
+            request.setStudentId(submission.getStudent().getId());
+            request.setCourseId(assignment.getCourse().getId());
+            request.setWeakTopic(assignment.getTitle());
+            request.setScore(percentage);
+
+            try {
+                aiRecommendationService.generateRecommendations(request);
+            } catch (Exception ex) {
+                System.out.println("AI recommendation generation failed: " + ex.getMessage());
+            }
+        }
     }
 
     private void updateStudentProgressAverage(User student, Course course) {
