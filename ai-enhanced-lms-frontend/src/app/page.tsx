@@ -1,65 +1,117 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Brain, BarChart3, GraduationCap, ShieldCheck } from "lucide-react";
+import PublicHeader from "@/components/layout/PublicHeader";
+import Footer from "@/components/layout/Footer";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen bg-gray-50">
+      <PublicHeader />
+
+      <section className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-2 lg:items-center">
+        <div>
+          <p className="mb-3 inline-flex rounded-full bg-blue-50 px-4 py-1 text-sm font-medium text-blue-700">
+            AI-Powered Learning Management System
           </p>
+
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900 md:text-6xl">
+            Smarter learning with analytics, quizzes, and AI recommendations.
+          </h1>
+
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-gray-600">
+            A full-stack LMS platform for admins, teachers, and students. Manage
+            courses, assignments, grades, progress, discussions, notifications,
+            quizzes, and personalized AI learning recommendations.
+          </p>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link href="/register">
+              <Button>Start Learning</Button>
+            </Link>
+
+            <Link href="/login">
+              <Button variant="outline">Login</Button>
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+
+        <Card className="bg-gradient-to-br from-white to-blue-50">
+          <div className="grid gap-4">
+            <FeatureRow
+              icon={<GraduationCap />}
+              title="Role-Based LMS"
+              description="Admin, Teacher, and Student dashboards with clean workflows."
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+            <FeatureRow
+              icon={<Brain />}
+              title="AI Recommendations"
+              description="Low scores trigger trusted learning resources using SerpAPI."
+            />
+            <FeatureRow
+              icon={<BarChart3 />}
+              title="Performance Analytics"
+              description="Grade trends, progress tracking, histograms, and insights."
+            />
+            <FeatureRow
+              icon={<ShieldCheck />}
+              title="Secure Backend"
+              description="Spring Boot APIs, JWT authentication, MySQL, and validation."
+            />
+          </div>
+        </Card>
+      </section>
+
+      <section className="mx-auto grid max-w-7xl gap-6 px-6 pb-20 md:grid-cols-3">
+        <Card>
+          <h3 className="text-lg font-semibold text-gray-900">For Admins</h3>
+          <p className="mt-2 text-sm leading-6 text-gray-600">
+            Manage users, courses, teachers, students, and system-level data.
+          </p>
+        </Card>
+
+        <Card>
+          <h3 className="text-lg font-semibold text-gray-900">For Teachers</h3>
+          <p className="mt-2 text-sm leading-6 text-gray-600">
+            Create courses, upload resources, grade submissions, and view
+            student analytics.
+          </p>
+        </Card>
+
+        <Card>
+          <h3 className="text-lg font-semibold text-gray-900">For Students</h3>
+          <p className="mt-2 text-sm leading-6 text-gray-600">
+            Access courses, submit assignments, track progress, attempt quizzes,
+            and receive AI recommendations.
+          </p>
+        </Card>
+      </section>
+
+      <Footer />
+    </main>
+  );
+}
+
+function FeatureRow({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="flex gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
+      <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
+        {icon}
+      </div>
+
+      <div>
+        <h3 className="font-semibold text-gray-900">{title}</h3>
+        <p className="mt-1 text-sm leading-6 text-gray-600">{description}</p>
+      </div>
     </div>
   );
 }
