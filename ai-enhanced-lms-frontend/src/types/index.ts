@@ -44,6 +44,16 @@ export interface Course {
   updatedAt?: string;
 }
 
+export interface Enrollment {
+  id: number;
+  studentId: number;
+  studentName?: string;
+  courseId: number;
+  courseTitle?: string;
+  active: boolean;
+  enrolledAt?: string;
+}
+
 export interface Assignment {
   id: number;
   title: string;
@@ -104,7 +114,9 @@ export interface Progress {
   progressPercentage: number;
   averageScore: number;
   performanceLevel: string;
-  lastAccessedAt: string;
+  lastAccessedAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ApiError {
