@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.prajwalmh.AI_Enhanced.LMS.backend.dto.response.StudentQuizResponse;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -44,5 +47,24 @@ public class QuizController {
     public ResponseEntity<String> deleteQuiz(@PathVariable Long quizId) {
         quizGenerationService.deleteQuiz(quizId);
         return ResponseEntity.ok("Quiz deleted successfully");
+    }
+
+
+    @GetMapping("/student/quizzes/course/{courseId}")
+    public ResponseEntity<List<StudentQuizResponse>> getPublishedQuizzesByCourse(
+            @PathVariable Long courseId
+    ) {
+        return ResponseEntity.ok(
+                quizGenerationService.getPublishedQuizzesByCourse(courseId)
+        );
+    }
+
+    @GetMapping("/student/quizzes/{quizId}")
+    public ResponseEntity<StudentQuizResponse> getPublishedQuizForStudent(
+            @PathVariable Long quizId
+    ) {
+        return ResponseEntity.ok(
+                quizGenerationService.getPublishedQuizForStudent(quizId)
+        );
     }
 }

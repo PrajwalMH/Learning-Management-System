@@ -1,6 +1,13 @@
 import api from "@/lib/api";
-import { AiRecommendation, Assignment, Course, Enrollment, Grade, Progress } from "@/types";
-
+import {
+  AiRecommendation,
+  Assignment,
+  Course,
+  Enrollment,
+  Grade,
+  Progress,
+  StudentQuiz,
+} from "@/types";
 
 export async function getStudentEnrollments(studentId: number) {
   const response = await api.get<Enrollment[]>(
@@ -43,6 +50,22 @@ export async function getStudentRecommendations(studentId: number) {
 export async function getAssignmentsByCourse(courseId: number) {
   const response = await api.get<Assignment[]>(
     `/courses/${courseId}/assignments`
+  );
+
+  return response.data;
+}
+
+export async function getPublishedQuizzesByCourse(courseId: number) {
+  const response = await api.get<StudentQuiz[]>(
+    `/student/quizzes/course/${courseId}`
+  );
+
+  return response.data;
+}
+
+export async function getStudentQuizById(quizId: number) {
+  const response = await api.get<StudentQuiz>(
+    `/student/quizzes/${quizId}`
   );
 
   return response.data;

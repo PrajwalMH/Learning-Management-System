@@ -127,3 +127,28 @@ export interface ApiError {
   path?: string;
   validationErrors?: Record<string, string>;
 }
+
+export interface StudentQuizQuestion {
+  id: number;
+  questionText: string;
+  optionA: string;
+  optionB: string;
+  optionC: string;
+  optionD: string;
+  questionOrder: number;
+  marks: number;
+}
+
+export interface StudentQuiz {
+  id: number;
+  title: string;
+  description: string;
+  topic: string;
+  courseId: number;
+  courseTitle: string;
+  moduleId?: number;
+  moduleTitle?: string;
+  totalQuestions: number;
+  publishedAt?: string;
+  questions?: StudentQuizQuestion[];
+}

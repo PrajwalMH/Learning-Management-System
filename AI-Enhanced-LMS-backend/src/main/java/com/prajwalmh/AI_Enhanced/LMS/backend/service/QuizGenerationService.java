@@ -11,6 +11,8 @@ import com.prajwalmh.AI_Enhanced.LMS.backend.repository.QuizRepository;
 import com.prajwalmh.AI_Enhanced.LMS.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.prajwalmh.AI_Enhanced.LMS.backend.dto.response.StudentQuizQuestionResponse;
+import com.prajwalmh.AI_Enhanced.LMS.backend.dto.response.StudentQuizResponse;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -243,6 +245,74 @@ public class QuizGenerationService {
                 .explanation(question.getExplanation())
                 .questionOrder(question.getQuestionOrder())
                 .marks(question.getMarks())
+                .build();
+    }
+
+    public List<StudentQuizResponse> getPublishedQuizzesByCourse(Long courseId) {
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found with id: " + courseId));
+
+        return quizRepository.findByCourse(course)
+                .stream()
+                .filter(Quiz::isPublished)
+                .map(quiz -> mapToStudentQuizResponse(quiz, false))
+                .toList();
+    }
+
+    public StudentQuizResponse getPublishedQuizForStudent(Long quizId) {
+
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new RuntimeException("Quiz not found with id: " + quizId));
+
+        if (!quiz.isPublished()) {
+            throw new RuntimeException("Quiz is not published yet");
+        }
+
+        return mapToStudentQuizResponse(quiz, true);
+    }
+
+    private StudentQuizResponse mapToStudentQuizResponse(
+            Quiz quiz,
+            boolean includeQuestions
+    ) {
+        Course course = quiz.getCourse();
+        CourseModule module = quiz.getModule();
+
+        List<StudentQuizQuestionResponse> questions = null;
+
+        if (includeQuestions) {
+            questions = quizQuestionRepository.findByQuizOrderByQuestionOrderAsc(quiz)
+                    .stream()
+                    .map(question -> StudentQuizQuestionResponse.builder()
+                            .id(question.getId())
+                            .questionText(question.getQuestionText())
+                            .optionA(question.getOptionA())
+                            .optionB(question.getOptionB())
+                            .optionC(question.getOptionC())
+                            .optionD(question.getOptionD())
+                            .questionOrder(question.getQuestionOrder())
+                            .marks(question.getMarks())
+                            .build())
+                    .toList();
+        }
+
+        int totalQuestions = quizQuestionRepository
+                .findByQuizOrderByQuestionOrderAsc(quiz)
+                .size();
+
+        return StudentQuizResponse.builder()
+                .id(quiz.getId())
+                .title(quiz.getTitle())
+                .description(quiz.getDescription())
+                .topic(quiz.getTopic())
+                .courseId(course != null ? course.getId() : null)
+                .courseTitle(course != null ? course.getTitle() : null)
+                .moduleId(module != null ? module.getId() : null)
+                .moduleTitle(module != null ? module.getTitle() : null)
+                .totalQuestions(totalQuestions)
+                .publishedAt(quiz.getPublishedAt())
+                .questions(questions)
                 .build();
     }
 }
