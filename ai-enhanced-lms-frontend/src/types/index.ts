@@ -152,3 +152,27 @@ export interface StudentQuiz {
   publishedAt?: string;
   questions?: StudentQuizQuestion[];
 }
+
+export interface QuizAttemptRequest {
+  studentId: number;
+  submittedAnswers: Record<number, string>;
+}
+
+
+
+export interface QuizAttemptResponse {
+  id: number;
+  quizId: number;
+  quizTitle: string;
+  courseId: number;
+  courseTitle: string;
+  studentId: number;
+  studentName: string;
+  studentEmail: string;
+  score: number;
+  totalQuestions: number;
+  correctAnswers: number;
+  percentage: number;
+  submittedAnswers: Record<number, string>;
+  attemptedAt: string;
+}

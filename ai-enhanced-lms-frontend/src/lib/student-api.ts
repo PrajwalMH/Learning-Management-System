@@ -6,8 +6,11 @@ import {
   Enrollment,
   Grade,
   Progress,
+  QuizAttemptRequest,
+  QuizAttemptResponse,
   StudentQuiz,
 } from "@/types";
+
 
 export async function getStudentEnrollments(studentId: number) {
   const response = await api.get<Enrollment[]>(
@@ -66,6 +69,26 @@ export async function getPublishedQuizzesByCourse(courseId: number) {
 export async function getStudentQuizById(quizId: number) {
   const response = await api.get<StudentQuiz>(
     `/student/quizzes/${quizId}`
+  );
+
+  return response.data;
+}
+
+export async function submitQuizAttempt(
+  quizId: number,
+  data: QuizAttemptRequest
+) {
+  const response = await api.post<QuizAttemptResponse>(
+    `/quizzes/${quizId}/attempt`,
+    data
+  );
+
+  return response.data;
+}
+
+export async function getStudentQuizAttempts(studentId: number) {
+  const response = await api.get<QuizAttemptResponse[]>(
+    `/students/${studentId}/quiz-attempts`
   );
 
   return response.data;

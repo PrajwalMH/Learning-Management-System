@@ -65,4 +65,16 @@ public class AuthService {
                 .role(user.getRole())
                 .build();
     }
+
+    public String resetPassword(String email, String newPassword) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+
+        userRepository.save(user);
+
+        return "Password reset successfully";
+    }
 }
